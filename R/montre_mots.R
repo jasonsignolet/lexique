@@ -27,10 +27,8 @@ montre_mots <- function(debout, fin = NULL, instructions = TRUE) {
     cat("\n")
   }
 
-  debout <- max(debout, 1)
-
   if (is.null(fin)) {
-    if (debout > 0) {
+    if (debout >= 1) {
       fin <- debout
       debout <- 1
     } else {
