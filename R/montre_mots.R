@@ -1,4 +1,6 @@
 # Faire disponible le taille de la base de donnees
+get("mots")
+get("lexique")
 pkg_env <- new.env(parent = emptyenv())
 pkg_env$taille_de_bdd <- mots[, .N]
 
