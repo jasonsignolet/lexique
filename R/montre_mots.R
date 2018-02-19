@@ -1,0 +1,84 @@
+# Faire disponible le taille de la base de donnees
+pkg_env <- new.env(parent = emptyenv())
+pkg_env$taille_de_bdd <- mots[, .N]
+
+#' Répéter les mots françaises plus communs
+#'
+#' @param debout int: Les mots plus hauts. Si vous utilisez `fin`, ceci le rang
+#'    inferieur.
+#' @param fin int: Le rang superieur.
+#' @param instructions Boolean: Montre les instructions ou non?
+#' @require "data.table"
+#' @examples
+#' # Les mille mots plus hauts
+#' montre_mots(1000)
+#'
+#' # Les mots de rang 500 à 600
+#' montre_mots(500, 600)
+#'
+#' # Les mille mots plus bas
+#' montre_mots(-1000)
+montre_mots <- function(debout, fin = NULL, instructions = TRUE) {
+  if (instructions) {
+    cat("#########################################################################\n")
+    cat("Appuyez sur la touche ENTER pour montre le mot suivant.\n")
+    cat("Appuyez sur n'importe quel bouton et puis appuyez sur ENTER pour quitter.\n")
+    cat("Appuyez sur la touche '?' et puis appuyez sur ENTER pour quitter.\n")
+    cat(sprintf("Il y a %s mots dans ce base de donnes\n", pkg_env$taille_de_bdd))
+    cat("#########################################################################\n")
+    cat("\n")
+  }
+
+  debout <- max(debout, 1)
+
+  if (is.null(fin)) {
+    fin <- debout
+    debout <- 1
+  } else {
+    fin <- min(fin, pkg_env$taille_de_bdd)
+  }
+
+  if (debout != fin) {
+    seq_de_mots <- sample(debout:fin)
+  } else {
+    seq_de_mots <- debout
+  }
+
+
+  for (i in seq_along(seq_de_mots)) {
+    m <- seq_de_mots[i]
+    mot_courant <- mots[m, mot]
+    n <- readline(prompt = paste0(mot_courant, " "))
+
+    if (n == "?" || grepl("\\?", n)) {
+      if (n != "?") {
+        mot_courant <- gsub("\\?", "", n)
+      }
+
+      print(mots[mot == mot_courant])
+
+      print(
+        lexique[lemme == mot_courant,
+                .(ortho, genre, nombre, phon, orthosyll, freqfilms2, freqlivres,
+                  cgram, infover)]
+      )
+
+      ouvrir_browser <- readline(prompt = paste0("Entrez 'oui' pour ouvrir browser: "))
+
+      if (ouvrir_browser == "oui") {
+        url <- paste0("http://www.wordreference.com/fren/", mot_courant)
+        print(url)
+        print(browseURL(url,
+                        browser = "/usr/bin/open -a 'Google Chrome'",
+                        encodeIfNeeded = TRUE))
+      }
+      next
+    }
+
+    if (grepl("[[:alnum:]]", n)) {
+      break
+    }
+
+  }
+  return("fin")
+}
