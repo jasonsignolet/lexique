@@ -15,12 +15,14 @@
 #' # Les mille mots plus bas
 #' montre_mots(-1000)
 montre_mots <- function(debout, fin = NULL, instructions = TRUE) {
+  taille <- mots[, .N]
+
   if (instructions) {
     cat("#########################################################################\n")
     cat("Appuyez sur la touche ENTER pour montre le mot suivant.\n")
     cat("Appuyez sur n'importe quel bouton et puis appuyez sur ENTER pour quitter.\n")
     cat("Appuyez sur la touche '?' et puis appuyez sur ENTER pour quitter.\n")
-    cat(sprintf("Il y a %s mots dans ce base de donnes\n", mots[, .N]))
+    cat(sprintf("Il y a %s mots dans ce base de donnes\n", taille))
     cat("#########################################################################\n")
     cat("\n")
   }
@@ -28,10 +30,15 @@ montre_mots <- function(debout, fin = NULL, instructions = TRUE) {
   debout <- max(debout, 1)
 
   if (is.null(fin)) {
-    fin <- debout
-    debout <- 1
+    if (debout > 0) {
+      fin <- debout
+      debout <- 1
+    } else {
+      debout <- taille + debout
+      fin <- taille
+    }
   } else {
-    fin <- min(fin, mots[, .N])
+    fin <- min(fin, taille)
   }
 
   if (debout != fin) {
