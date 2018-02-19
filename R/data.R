@@ -1,5 +1,5 @@
 #' Lexique
-lexique
+"lexique"
 
 #' Mots
-mots
+"mots"
