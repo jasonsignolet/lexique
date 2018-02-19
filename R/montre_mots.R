@@ -1,16 +1,10 @@
-# Faire disponible le taille de la base de donnees
-data("mots")
-data("lexique")
-pkg_env <- new.env(parent = emptyenv())
-pkg_env$taille_de_bdd <- mots[, .N]
-
 #' Répéter les mots françaises plus communs
 #'
 #' @param debout int: Les mots plus hauts. Si vous utilisez `fin`, ceci le rang
 #'    inferieur.
 #' @param fin int: Le rang superieur.
 #' @param instructions Boolean: Montre les instructions ou non?
-#' @require "data.table"
+#' @export
 #' @examples
 #' # Les mille mots plus hauts
 #' montre_mots(1000)
@@ -26,7 +20,7 @@ montre_mots <- function(debout, fin = NULL, instructions = TRUE) {
     cat("Appuyez sur la touche ENTER pour montre le mot suivant.\n")
     cat("Appuyez sur n'importe quel bouton et puis appuyez sur ENTER pour quitter.\n")
     cat("Appuyez sur la touche '?' et puis appuyez sur ENTER pour quitter.\n")
-    cat(sprintf("Il y a %s mots dans ce base de donnes\n", pkg_env$taille_de_bdd))
+    cat(sprintf("Il y a %s mots dans ce base de donnes\n", mots[, .N]))
     cat("#########################################################################\n")
     cat("\n")
   }
@@ -37,7 +31,7 @@ montre_mots <- function(debout, fin = NULL, instructions = TRUE) {
     fin <- debout
     debout <- 1
   } else {
-    fin <- min(fin, pkg_env$taille_de_bdd)
+    fin <- min(fin, mots[, .N])
   }
 
   if (debout != fin) {
