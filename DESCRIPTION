@@ -6,9 +6,8 @@ Author: Jason Signolet
 Maintainer: Jason Signolet <jasonsignolet@gmail.com>
 Description: Un moyen pour apprendre les mots plus communs
     d'une base de données de mots françaises.
-Imports:
-    data.table,
-    magrittr
+Depends:
+    data.table
 License: Apache License
 Encoding: UTF-8
 LazyData: true
